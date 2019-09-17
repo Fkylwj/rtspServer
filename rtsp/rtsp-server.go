@@ -6,7 +6,7 @@ import (
 	"net"
 	"sync"
 
-	"github.com/penggy/EasyGoLib/utils"
+	"TlsEasyDarwin/penggy/EasyGoLib/utils"
 )
 
 type Server struct {

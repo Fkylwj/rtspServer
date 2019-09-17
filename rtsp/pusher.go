@@ -5,7 +5,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/penggy/EasyGoLib/utils"
+	"TlsEasyDarwin/penggy/EasyGoLib/utils"
 )
 
 type Pusher struct {

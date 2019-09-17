@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/penggy/EasyGoLib/utils"
+	"TlsEasyDarwin/penggy/EasyGoLib/utils"
 )
 
 type UDPServer struct {

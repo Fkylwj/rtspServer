@@ -8,12 +8,12 @@ import (
 	"os"
 	"time"
 
-	"github.com/EasyDarwin/models"
-	"github.com/EasyDarwin/routers"
-	"github.com/EasyDarwin/rtsp"
-	figure "github.com/common-nighthawk/go-figure"
-	"github.com/penggy/EasyGoLib/utils"
-	"github.com/penggy/service"
+	"TlsEasyDarwin/models"
+	"TlsEasyDarwin/penggy/EasyGoLib/utils"
+	"TlsEasyDarwin/penggy/service"
+	"TlsEasyDarwin/routers"
+	"TlsEasyDarwin/rtsp"
+	"github.com/common-nighthawk/go-figure"
 )
 
 type program struct {

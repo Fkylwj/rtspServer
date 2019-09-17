@@ -15,7 +15,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/penggy/EasyGoLib/utils"
+	"TlsEasyDarwin/penggy/EasyGoLib/utils"
 
 	"github.com/teris-io/shortid"
 )
