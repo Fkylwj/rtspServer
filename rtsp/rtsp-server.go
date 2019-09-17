@@ -1,6 +1,7 @@
 package rtsp
 
 import (
+	"TlsEasyDarwin/tlswrap"
 	"fmt"
 	"log"
 	"net"
@@ -10,7 +11,9 @@ import (
 )
 
 type Server struct {
-	TCPListener *net.TCPListener
+	// TCPListener *net.TCPListener
+	TCPListener net.Listener
+	Tls bool
 	TCPPort     int
 	Stoped      bool
 	pushers     map[string]*Pusher // Path <-> Pusher
@@ -28,11 +31,26 @@ func GetServer() *Server {
 }
 
 func (server *Server) Start() (err error) {
-	addr, err := net.ResolveTCPAddr("tcp", fmt.Sprintf(":%d", server.TCPPort))
+
+	port := server.TCPPort
+	addr, err := net.ResolveTCPAddr("tcp", fmt.Sprintf(":%d", port))
 	if err != nil {
 		return
 	}
-	listener, err := net.ListenTCP("tcp", addr)
+
+	tls := utils.Conf().Section("tls").Key("enable").MustBool(false)
+	server.Tls = tls
+
+	var listener net.Listener
+	// var listener *net.TCPListener
+	if server.Tls {
+		cert := utils.Conf().Section("tls").Key("cert").MustString("")
+		key := utils.Conf().Section("tls").Key("key").MustString("")
+		listener, err = tlswrap.NewTlsListener(cert, key, addr)
+	} else {
+		listener, err = net.ListenTCP("tcp", addr)
+	}
+
 	if err != nil {
 		return
 	}
@@ -40,19 +58,20 @@ func (server *Server) Start() (err error) {
 	server.Stoped = false
 	server.TCPListener = listener
 	log.Println("rtsp server start on", server.TCPPort)
-	networkBuffer := utils.Conf().Section("rtsp").Key("network_buffer").MustInt(1048576)
+	// networkBuffer := utils.Conf().Section("rtsp").Key("network_buffer").MustInt(1048576)
 	for !server.Stoped {
-		conn, err := server.TCPListener.AcceptTCP()
+		// conn, err := server.TCPListener.AcceptTCP()
+		conn, err := server.TCPListener.Accept()
 		if err != nil {
 			log.Println(err)
 			continue
 		}
-		if err := conn.SetReadBuffer(networkBuffer); err != nil {
-			log.Printf("rtsp server conn set read buffer error, %v", err)
-		}
-		if err := conn.SetWriteBuffer(networkBuffer); err != nil {
-			log.Printf("rtsp server conn set write buffer error, %v", err)
-		}
+		// if err := conn.SetReadBuffer(networkBuffer); err != nil {
+		// 	log.Printf("rtsp server conn set read buffer error, %v", err)
+		// }
+		// if err := conn.SetWriteBuffer(networkBuffer); err != nil {
+		// 	log.Printf("rtsp server conn set write buffer error, %v", err)
+		// }
 		session := NewSession(server, conn)
 		go session.Start()
 	}
@@ -113,3 +132,4 @@ func (server *Server) GetPusherSize() (size int) {
 	server.pushersLock.RUnlock()
 	return
 }
+

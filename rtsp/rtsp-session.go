@@ -87,8 +87,9 @@ const UDP_BUF_SIZE = 1048576
 type Session struct {
 	ID        string
 	Server    *Server
-	Conn      *net.TCPConn
+	// Conn      *net.TCPConn
 	connRW    *bufio.ReadWriter
+	Conn      net.Conn
 	connWLock sync.RWMutex
 	Type      SessionType
 	TransType TransType
@@ -127,7 +128,8 @@ func (session *Session) String() string {
 	return fmt.Sprintf("session[%v][%v][%s][%s]", session.Type, session.TransType, session.Path, session.ID)
 }
 
-func NewSession(server *Server, conn *net.TCPConn) *Session {
+// func NewSession(server *Server, conn *net.TCPConn) *Session {
+func NewSession(server *Server, conn net.Conn) *Session {
 	networkBuffer := utils.Conf().Section("rtsp").Key("network_buffer").MustInt(1048576)
 	session := &Session{
 		ID:      shortid.MustGenerate(),
