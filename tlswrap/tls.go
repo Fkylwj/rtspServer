@@ -3,6 +3,7 @@ package tlswrap
 import (
 	// "bufio"
 	"crypto/tls"
+	"fmt"
 	"log"
 	"net"
 )
@@ -64,9 +65,37 @@ func NewTlsListener(certFile string, keyFile string, addr *net.TCPAddr) (net.Lis
 
 	config := &tls.Config{Certificates: []tls.Certificate{cert}}
 
+	// *TCPListener
 	listener, err := net.ListenTCP("tcp", addr)
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
 	ln := tls.NewListener(listener, config)
-
 	return ln, nil
 }
 
+// func NewTlsListener2(certFile string, keyFile string, port int) (*net.TCPListener, error) {
+func NewTlsListener2(certFile string, keyFile string, port int) (net.Listener, error) {
+	cert, err := tls.LoadX509KeyPair(certFile, keyFile)
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+
+	config := &tls.Config{Certificates: []tls.Certificate{cert}}
+	laddr := fmt.Sprintf(":%d", port)
+	ln, err := tls.Listen("tcp", laddr, config)
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+	return ln, nil
+
+	// listener, ok := ln.(*net.TCPListener)
+	// if ok {
+	// 	// false
+	// 	log.Printf("类型转换:%v\n", ok)
+	// }
+	// return listener, nil
+}

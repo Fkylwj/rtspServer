@@ -13,7 +13,8 @@ import (
 type Server struct {
 	// TCPListener *net.TCPListener
 	TCPListener net.Listener
-	Tls bool
+	// 是否使用tls
+	Tls         bool
 	TCPPort     int
 	Stoped      bool
 	pushers     map[string]*Pusher // Path <-> Pusher
@@ -22,6 +23,9 @@ type Server struct {
 
 var Instance *Server = &Server{
 	Stoped:  true,
+	// 默认不使用tls
+	Tls: false,
+	// 可执行文件名必须为easydarwin(不区分大小写),配置文件为可执行文件名+".ini"(已固定为easydarwin.ini)
 	TCPPort: utils.Conf().Section("rtsp").Key("port").MustInt(554),
 	pushers: make(map[string]*Pusher),
 }
@@ -30,7 +34,23 @@ func GetServer() *Server {
 	return Instance
 }
 
+func NewServer(port int, tls bool) *Server {
+	return &Server{
+		Stoped: true,
+		Tls: tls,
+		TCPPort: port,
+		pushers: make(map[string]*Pusher),
+	}
+}
+
+
 func (server *Server) Start() (err error) {
+
+	// 配置文件内有tls时,启用rtspsServer; 没有时rtspsServer=nil
+	err = nil
+	if server == nil {
+		return nil
+	}
 
 	port := server.TCPPort
 	addr, err := net.ResolveTCPAddr("tcp", fmt.Sprintf(":%d", port))
@@ -38,17 +58,17 @@ func (server *Server) Start() (err error) {
 		return
 	}
 
-	tls := utils.Conf().Section("tls").Key("enable").MustBool(false)
-	server.Tls = tls
-
 	var listener net.Listener
 	// var listener *net.TCPListener
 	if server.Tls {
 		cert := utils.Conf().Section("tls").Key("cert").MustString("")
 		key := utils.Conf().Section("tls").Key("key").MustString("")
 		listener, err = tlswrap.NewTlsListener(cert, key, addr)
+		// listener, err = tlswrap.NewTlsListener2(cert, key, port)
+		log.Println("rtsps server start on", server.TCPPort)
 	} else {
 		listener, err = net.ListenTCP("tcp", addr)
+		log.Println("rtsp server start on", server.TCPPort)
 	}
 
 	if err != nil {
@@ -57,7 +77,7 @@ func (server *Server) Start() (err error) {
 
 	server.Stoped = false
 	server.TCPListener = listener
-	log.Println("rtsp server start on", server.TCPPort)
+	// log.Println("rtsp server start on", server.TCPPort)
 	// networkBuffer := utils.Conf().Section("rtsp").Key("network_buffer").MustInt(1048576)
 	for !server.Stoped {
 		// conn, err := server.TCPListener.AcceptTCP()
@@ -66,6 +86,7 @@ func (server *Server) Start() (err error) {
 			log.Println(err)
 			continue
 		}
+
 		// if err := conn.SetReadBuffer(networkBuffer); err != nil {
 		// 	log.Printf("rtsp server conn set read buffer error, %v", err)
 		// }
@@ -132,4 +153,3 @@ func (server *Server) GetPusherSize() (size int) {
 	server.pushersLock.RUnlock()
 	return
 }
-
