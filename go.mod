@@ -5,7 +5,7 @@ go 1.12
 require (
 	github.com/StackExchange/wmi v0.0.0-20180412205111-cdffdb33acae // indirect
 	github.com/common-nighthawk/go-figure v0.0.0-20180619031829-18b2b544842c
-	github.com/denisenkom/go-mssqldb v0.0.0-20190915052044-aa4949efa320 // indirect
+	github.com/denisenkom/go-mssqldb v0.0.0-20190920000552-128d9f4ae1cd // indirect
 	github.com/eiannone/keyboard v0.0.0-20190314115158-7169d0afeb4f
 	github.com/erikstmartin/go-testdb v0.0.0-20160219214506-8d10e4a1bae5 // indirect
 	github.com/fastly/go-utils v0.0.0-20180712184237-d95a45783239 // indirect
@@ -13,7 +13,7 @@ require (
 	github.com/gin-contrib/sse v0.0.0-20170109093832-22d885f9ecc7 // indirect
 	github.com/gin-contrib/static v0.0.0-20180301030858-73da7037e716
 	github.com/gin-gonic/gin v1.3.0
-	github.com/go-ini/ini v1.46.0
+	github.com/go-ini/ini v1.47.0
 	github.com/go-ole/go-ole v0.0.0-20180213002836-a1ec82a652eb // indirect
 	github.com/go-redis/redis v6.15.5+incompatible
 	github.com/go-sql-driver/mysql v1.4.1 // indirect
@@ -42,10 +42,10 @@ require (
 	github.com/tebeka/strftime v0.1.3 // indirect
 	github.com/teris-io/shortid v0.0.0-20171029131806-771a37caa5cf
 	github.com/ugorji/go v0.0.0-20180307152341-02537d3a3e32 // indirect
-	golang.org/x/net v0.0.0-20190916140828-c8589233b77d // indirect
-	golang.org/x/sys v0.0.0-20190916202348-b4ddaad3f8a3
+	golang.org/x/net v0.0.0-20190918130420-a8b05e9114ab // indirect
+	golang.org/x/sys v0.0.0-20190919044723-0c1ff786ef13
 	google.golang.org/appengine v1.6.2 // indirect
 	gopkg.in/go-playground/assert.v1 v1.2.1 // indirect
 	gopkg.in/go-playground/validator.v8 v8.18.2
-	gopkg.in/ini.v1 v1.46.0 // indirect
+	gopkg.in/ini.v1 v1.47.0 // indirect
 )

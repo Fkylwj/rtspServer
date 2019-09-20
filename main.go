@@ -185,6 +185,9 @@ ffmpeg -re -i test.mp4 -rtsp_transport tcp -c copy -f rtsp rtsp://127.0.0.1:8554
 播放
 ffplay rtsp://10.5.15.57:8554/test.mp4
 
+// 编译release版本，日志写入文件
+// go build -tags release -o EasyDarwin main.go
+
 可执行文件名必须为EasyDarwin(不区分大小写),因为根据此读取配置文件easydarwin.ini
 // TODO
 // 1. 配置文件更改，证书、测试相关
@@ -198,8 +201,7 @@ func main() {
 	if utils.Debug {
 		log.SetFlags(log.Lshortfile | log.LstdFlags)
 	}
-	// 编译release版本，日志写入文件
-	// go build -tags release -o EasyDarwin main.go
+
 	// 日志写入logs目录内文件
 	log.SetOutput(utils.GetLogWriter())
 
