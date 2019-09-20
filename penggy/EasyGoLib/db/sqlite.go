@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	"TlsEasyDarwin/penggy/EasyGoLib/utils"
+	"rtspServer/penggy/EasyGoLib/utils"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 )

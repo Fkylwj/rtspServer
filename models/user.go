@@ -2,7 +2,7 @@ package models
 
 import (
 	"github.com/jinzhu/gorm"
-	"TlsEasyDarwin/penggy/EasyGoLib/utils"
+	"rtspServer/penggy/EasyGoLib/utils"
 )
 
 type User struct {

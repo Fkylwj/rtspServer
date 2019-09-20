@@ -1,6 +1,6 @@
 package routers
 
-import "TlsEasyDarwin/penggy/EasyGoLib/utils"
+import "rtspServer/penggy/EasyGoLib/utils"
 
 const (
 	BuildVersion = "v8.0"

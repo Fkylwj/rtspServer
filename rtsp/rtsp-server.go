@@ -1,13 +1,13 @@
 package rtsp
 
 import (
-	"TlsEasyDarwin/tlswrap"
+	"rtspServer/tlswrap"
 	"fmt"
 	"log"
 	"net"
 	"sync"
 
-	"TlsEasyDarwin/penggy/EasyGoLib/utils"
+	"rtspServer/penggy/EasyGoLib/utils"
 )
 
 type Server struct {

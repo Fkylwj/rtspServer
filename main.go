@@ -8,11 +8,11 @@ import (
 	"os"
 	"time"
 
-	"TlsEasyDarwin/models"
-	"TlsEasyDarwin/penggy/EasyGoLib/utils"
-	"TlsEasyDarwin/penggy/service"
-	"TlsEasyDarwin/routers"
-	"TlsEasyDarwin/rtsp"
+	"rtspServer/models"
+	"rtspServer/penggy/EasyGoLib/utils"
+	"rtspServer/penggy/service"
+	"rtspServer/routers"
+	"rtspServer/rtsp"
 	"github.com/common-nighthawk/go-figure"
 )
 

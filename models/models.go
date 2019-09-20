@@ -1,8 +1,8 @@
 package models
 
 import (
-	"TlsEasyDarwin/penggy/EasyGoLib/db"
-	"TlsEasyDarwin/penggy/EasyGoLib/utils"
+	"rtspServer/penggy/EasyGoLib/db"
+	"rtspServer/penggy/EasyGoLib/utils"
 )
 
 func Init() (err error) {
