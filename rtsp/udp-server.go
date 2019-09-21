@@ -4,10 +4,11 @@ import (
 	"bytes"
 	"log"
 	"net"
+	"rtspServer/setting"
 	"strconv"
 	"strings"
 
-	"rtspServer/penggy/EasyGoLib/utils"
+	// "rtspServer/penggy/EasyGoLib/utils"
 )
 
 type UDPServer struct {
@@ -57,7 +58,7 @@ func (s *UDPServer) SetupAudio() (err error) {
 	if err != nil {
 		return
 	}
-	networkBuffer := utils.Conf().Section("rtsp").Key("network_buffer").MustInt(1048576)
+	networkBuffer := setting.Conf().Section("rtsp").Key("network_buffer").MustInt(1048576)
 	if err := s.AConn.SetReadBuffer(networkBuffer); err != nil {
 		log.Printf("udp server audio conn set read buffer error, %v", err)
 	}
@@ -146,7 +147,7 @@ func (s *UDPServer) SetupVideo() (err error) {
 	if err != nil {
 		return
 	}
-	networkBuffer := utils.Conf().Section("rtsp").Key("network_buffer").MustInt(1048576)
+	networkBuffer := setting.Conf().Section("rtsp").Key("network_buffer").MustInt(1048576)
 	if err := s.VConn.SetReadBuffer(networkBuffer); err != nil {
 		log.Printf("udp server video conn set read buffer error, %v", err)
 	}

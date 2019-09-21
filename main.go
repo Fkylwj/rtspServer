@@ -8,12 +8,13 @@ import (
 	"os"
 	"time"
 
+	"github.com/common-nighthawk/go-figure"
 	"rtspServer/models"
 	"rtspServer/penggy/EasyGoLib/utils"
 	"rtspServer/penggy/service"
 	"rtspServer/routers"
 	"rtspServer/rtsp"
-	"github.com/common-nighthawk/go-figure"
+	"rtspServer/setting"
 )
 
 type program struct {
@@ -174,7 +175,6 @@ func (p *program) Stop(s service.Service) (err error) {
 	return
 }
 
-
 /*
 使用tls，要推流至rtsps
 ffmpeg -re -i test.mp4 -rtsp_transport tcp -c copy -f rtsp rtsps://127.0.0.1:8443/test.mp4
@@ -205,24 +205,24 @@ func main() {
 	// 日志写入logs目录内文件
 	log.SetOutput(utils.GetLogWriter())
 
-	sec := utils.Conf().Section("service")
+	sec := setting.Conf().Section("service")
 	svcConfig := &service.Config{
 		Name:        sec.Key("name").MustString("EasyDarwin_Service"),
 		DisplayName: sec.Key("display_name").MustString("EasyDarwin_Service"),
 		Description: sec.Key("description").MustString("EasyDarwin_Service"),
 	}
 
-	httpPort := utils.Conf().Section("http").Key("port").MustInt(10008)
+	httpPort := setting.Conf().Section("http").Key("port").MustInt(10008)
 
 	var rtspsSrv *rtsp.Server
 	var rtspsPort int
 	// 配置文件内有tls时,启用tls; 没有时tls=false
-	_, e := utils.Conf().GetSection("tls")
+	_, e := setting.Conf().GetSection("tls")
 	if e != nil {
 		rtspsSrv = nil
 		rtspsPort = 443
 	} else {
-		rtspsPort = utils.Conf().Section("tls").Key("port").MustInt(443)
+		rtspsPort = setting.Conf().Section("tls").Key("port").MustInt(443)
 		rtspsSrv = rtsp.NewServer(rtspsPort, true)
 	}
 
@@ -232,7 +232,7 @@ func main() {
 		rtspPort:   rtspServer.TCPPort,
 		rtspServer: rtspServer,
 		// 使用tls,rtsps server;
-		rtspsPort: rtspsPort,
+		rtspsPort:   rtspsPort,
 		rtspsServer: rtspsSrv,
 	}
 	var s, err = service.New(p, svcConfig)

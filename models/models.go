@@ -3,6 +3,7 @@ package models
 import (
 	"rtspServer/penggy/EasyGoLib/db"
 	"rtspServer/penggy/EasyGoLib/utils"
+	"rtspServer/setting"
 )
 
 func Init() (err error) {
@@ -12,7 +13,7 @@ func Init() (err error) {
 	}
 	db.SQLite.AutoMigrate(User{})
 	count := 0
-	sec := utils.Conf().Section("http")
+	sec := setting.Conf().Section("http")
 	defUser := sec.Key("default_username").MustString("admin")
 	defPass := sec.Key("default_password").MustString("admin")
 	db.SQLite.Model(User{}).Where("username = ?", defUser).Count(&count)

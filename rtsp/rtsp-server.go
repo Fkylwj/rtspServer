@@ -1,13 +1,14 @@
 package rtsp
 
 import (
+	"rtspServer/setting"
 	"rtspServer/tlswrap"
 	"fmt"
 	"log"
 	"net"
 	"sync"
 
-	"rtspServer/penggy/EasyGoLib/utils"
+	// "rtspServer/penggy/EasyGoLib/utils"
 )
 
 type Server struct {
@@ -26,7 +27,7 @@ var Instance *Server = &Server{
 	// 默认不使用tls
 	Tls: false,
 	// 可执行文件名必须为easydarwin(不区分大小写),配置文件为可执行文件名+".ini"(已固定为easydarwin.ini)
-	TCPPort: utils.Conf().Section("rtsp").Key("port").MustInt(554),
+	TCPPort: setting.Conf().Section("rtsp").Key("port").MustInt(554),
 	pushers: make(map[string]*Pusher),
 }
 
@@ -61,8 +62,8 @@ func (server *Server) Start() (err error) {
 	var listener net.Listener
 	// var listener *net.TCPListener
 	if server.Tls {
-		cert := utils.Conf().Section("tls").Key("cert").MustString("")
-		key := utils.Conf().Section("tls").Key("key").MustString("")
+		cert := setting.Conf().Section("tls").Key("cert").MustString("")
+		key := setting.Conf().Section("tls").Key("key").MustString("")
 		listener, err = tlswrap.NewTlsListener(cert, key, addr)
 		// listener, err = tlswrap.NewTlsListener2(cert, key, port)
 		log.Println("rtsps server start on", server.TCPPort)
@@ -78,7 +79,7 @@ func (server *Server) Start() (err error) {
 	server.Stoped = false
 	server.TCPListener = listener
 	// log.Println("rtsp server start on", server.TCPPort)
-	// networkBuffer := utils.Conf().Section("rtsp").Key("network_buffer").MustInt(1048576)
+	// networkBuffer := setting.Conf().Section("rtsp").Key("network_buffer").MustInt(1048576)
 	for !server.Stoped {
 		// conn, err := server.TCPListener.AcceptTCP()
 		conn, err := server.TCPListener.Accept()

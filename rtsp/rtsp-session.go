@@ -10,12 +10,13 @@ import (
 	"net"
 	"net/url"
 	"regexp"
+	"rtspServer/setting"
 	"strconv"
 	"strings"
 	"sync"
 	"time"
 
-	"rtspServer/penggy/EasyGoLib/utils"
+	// "rtspServer/penggy/EasyGoLib/utils"
 
 	"github.com/teris-io/shortid"
 )
@@ -130,14 +131,14 @@ func (session *Session) String() string {
 
 // func NewSession(server *Server, conn *net.TCPConn) *Session {
 func NewSession(server *Server, conn net.Conn) *Session {
-	networkBuffer := utils.Conf().Section("rtsp").Key("network_buffer").MustInt(1048576)
+	networkBuffer := setting.Conf().Section("rtsp").Key("network_buffer").MustInt(1048576)
 	session := &Session{
 		ID:      shortid.MustGenerate(),
 		Server:  server,
 		Conn:    conn,
 		connRW:  bufio.NewReadWriter(bufio.NewReaderSize(conn, networkBuffer), bufio.NewWriterSize(conn, networkBuffer)),
 		StartAt: time.Now(),
-		Timeout: utils.Conf().Section("rtsp").Key("timeout").MustInt(0),
+		Timeout: setting.Conf().Section("rtsp").Key("timeout").MustInt(0),
 
 		RTPHandles:  make([]func(*RTPPack), 0),
 		StopHandles: make([]func(), 0),

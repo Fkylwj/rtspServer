@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"rtspServer/setting"
 	"runtime"
 	"strings"
 	"time"
@@ -216,7 +217,7 @@ func (h *APIHandler) Logout(c *gin.Context) {
 
 func (h *APIHandler) DefaultLoginInfo(c *gin.Context) {
 	var user models.User
-	sec := utils.Conf().Section("http")
+	sec := setting.Conf().Section("http")
 	defUser := sec.Key("default_username").MustString("admin")
 	defPass := sec.Key("default_password").MustString("admin")
 	db.SQLite.First(&user, "username = ?", defUser)

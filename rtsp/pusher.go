@@ -2,10 +2,11 @@ package rtsp
 
 import (
 	"log"
+	"rtspServer/setting"
 	"strings"
 	"sync"
 
-	"rtspServer/penggy/EasyGoLib/utils"
+	// "rtspServer/penggy/EasyGoLib/utils"
 )
 
 type Pusher struct {
@@ -26,7 +27,7 @@ func NewPusher(session *Session) (pusher *Pusher) {
 	pusher = &Pusher{
 		Session:        session,
 		players:        make(map[string]*Player),
-		gopCacheEnable: utils.Conf().Section("rtsp").Key("gop_cache_enable").MustBool(true),
+		gopCacheEnable: setting.Conf().Section("rtsp").Key("gop_cache_enable").MustBool(true),
 		gopCache:       make([]*RTPPack, 0),
 
 		cond:  sync.NewCond(&sync.Mutex{}),

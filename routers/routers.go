@@ -6,6 +6,7 @@ import (
 	"mime"
 	"net/http"
 	"path/filepath"
+	"rtspServer/setting"
 
 	"rtspServer/penggy/EasyGoLib/db"
 
@@ -77,7 +78,7 @@ func Errors() gin.HandlerFunc {
 				case validator.ValidationErrors:
 					errs := err.Err.(validator.ValidationErrors)
 					for _, err := range errs {
-						sec := utils.Conf().Section("localize")
+						sec := setting.Conf().Section("localize")
 						field := sec.Key(err.Field).MustString(err.Field)
 						tag := sec.Key(err.Tag).MustString(err.Tag)
 						c.AbortWithStatusJSON(http.StatusBadRequest, fmt.Sprintf("%s %s", field, tag))
@@ -114,7 +115,7 @@ func Init() (err error) {
 	store := sessions.NewGormStoreWithOptions(db.SQLite, sessions.GormStoreOptions{
 		TableName: "t_sessions",
 	}, []byte("EasyDarwin@2018"))
-	tokenTimeout := utils.Conf().Section("http").Key("token_timeout").MustInt(7 * 86400)
+	tokenTimeout := setting.Conf().Section("http").Key("token_timeout").MustInt(7 * 86400)
 	store.Options(sessions.Options{HttpOnly: true, MaxAge: tokenTimeout, Path: "/"})
 	sessionHandle := sessions.Sessions("token", store)
 

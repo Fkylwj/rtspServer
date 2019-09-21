@@ -34,10 +34,12 @@
 
 - 测试推流
 
-    使用tls，要推流至rtsps
+    使用tls，推流至rtsps
+    
     ffmpeg -re -i test.mp4 -rtsp_transport tcp -c copy -f rtsp rtsps://127.0.0.1:8443/test.mp4
 
-    不使用tls，要推流至rtsp
+    不使用tls，推流至rtsp
+    
     ffmpeg -re -i test.mp4 -rtsp_transport tcp -c copy -f rtsp rtsp://127.0.0.1:8554/test.mp4
     
 	
