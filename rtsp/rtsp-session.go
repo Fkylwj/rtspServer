@@ -311,6 +311,9 @@ func (session *Session) handleRequest(req *Request) {
 		}
 		session.Path = url.Path
 
+		SdpAlexaFix(&req.Body)
+		// log.Printf("------------------------------req.Body:\n%s\n", req.Body)
+
 		session.SDPRaw = req.Body
 		session.SDPMap = ParseSDP(req.Body)
 		sdp, ok := session.SDPMap["audio"]
@@ -359,12 +362,18 @@ func (session *Session) handleRequest(req *Request) {
 		res.SetBody(session.Pusher.SDPRaw)
 	case "SETUP":
 		ts := req.Header["Transport"]
+		// log.Printf("------------------------------url:%s\n", req.URL)
+		// req.URL = req.URL[0:strings.LastIndex(req.URL, "/")+1] + "111/" + req.URL[strings.LastIndex(req.URL, "/")+1:]
+		// log.Printf("------------------------------url:%s\n", req.URL)
 		control := req.URL[strings.LastIndex(req.URL, "/")+1:]
+		// log.Printf("------------------------------control:%s\n", control)
 		mtcp := regexp.MustCompile("interleaved=(\\d+)(-(\\d+))?")
 		mudp := regexp.MustCompile("client_port=(\\d+)(-(\\d+))?")
 
 		if tcpMatchs := mtcp.FindStringSubmatch(ts); tcpMatchs != nil {
 			session.TransType = TRANS_TYPE_TCP
+			// log.Printf("--------------------session.AControl:%s\n", session.AControl)
+			// log.Printf("--------------------session.VControl:%s\n", session.VControl)
 			if control == session.AControl {
 				session.aRTPChannel, _ = strconv.Atoi(tcpMatchs[1])
 				session.aRTPControlChannel, _ = strconv.Atoi(tcpMatchs[3])
@@ -442,7 +451,10 @@ func (session *Session) handleRequest(req *Request) {
 		}
 		res.Header["Transport"] = ts
 	case "PLAY":
-		res.Header["Range"] = req.Header["Range"]
+		// 请求头存在Range,且不为空字符串
+		if ra, ok := req.Header["Range"]; ok && ra != "" {
+			res.Header["Range"] = req.Header["Range"]
+		}
 	case "RECORD":
 	}
 }
@@ -517,4 +529,25 @@ func (session *Session) SendRTP(pack *RTPPack) (err error) {
 		err = fmt.Errorf("session tcp send rtp got unkown pack type[%v]", pack.Type)
 	}
 	return
+}
+
+// sdp数据修正,满足alexa echo show要求
+// echo show 要求sdp数据里必须有a=range++任意字符+\r\n
+func SdpAlexaFix(sdp *string) {
+	// log.Printf("------------------------------sdp:\n%s\n", *sdp)
+	body := *sdp
+	// echo show 要求sdp数据里必须有a=range+任意字符+\r\n
+	// 若请求体内没有a=rang...一行，则在t=...行后增加a=range:npt=now-\r\n
+	// 匹配（a=range+任意字符+换行）
+	mrange := regexp.MustCompile("a=range.*?\n")
+	if line := mrange.FindStringSubmatch(body); line == nil {
+		// 不存在
+		// 匹配（t=+任意字符+换行）
+		rstr := regexp.MustCompile("t=.*?\n")
+		if line := rstr.FindStringSubmatch(body); line != nil {
+			body = rstr.ReplaceAllString(body, fmt.Sprintf("%sa=range:npt=now-\r\n", line[0]))
+		}
+	}
+	*sdp = body
+	// log.Printf("------------------------------sdp:\n%s\n", *sdp)
 }
