@@ -2,18 +2,23 @@ language: go
 sudo: false
 
 go:
-  - 1.6.x
-  - 1.7.x
-  - 1.8.x
-  - 1.9.x
   - 1.10.x
-  - tip
+  - 1.11.x
+  - 1.12.x
+  - 1.13.x
+  - master
+
+matrix:
+  fast_finish: true
+  include:
+  - go: 1.11.x
+    env: GO111MODULE=on
+  - go: 1.12.x
+    env: GO111MODULE=on
 
 install:
-  - echo "ignore go get"
-  - go get -u github.com/kardianos/govendor
+  - go get -t -v -d
   - go get github.com/campoy/embedmd
-  - govendor sync
 
 script:
   - embedmd -d *.md
