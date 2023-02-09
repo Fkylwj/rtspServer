@@ -12,7 +12,7 @@ github.com/gin-contrib/pprof
 github.com/gin-contrib/sse
 # github.com/gin-contrib/static v0.0.0-20190913125243-df30d4057ba1
 github.com/gin-contrib/static
-# github.com/gin-gonic/gin v1.7.0
+# github.com/gin-gonic/gin v1.7.7
 github.com/gin-gonic/gin
 github.com/gin-gonic/gin/binding
 github.com/gin-gonic/gin/internal/bytesconv
